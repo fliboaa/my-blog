@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>变体 A · 经典卡片流</title>
+<style>
+:root{
+  --magenta: hsl(326deg 100% 61%);
+  --blue: hsl(240deg 95% 62%);
+  --yellow: hsl(50deg 100% 50%);
+  --bg: hsl(210deg 15% 6%);
+  --bg-soft: hsl(210deg 15% 10%);
+  --surface: hsl(210deg 20% 13%);
+  --text: hsl(0deg 0% 100%);
+  --text-muted: hsl(210deg 20% 77%);
+  --text-dim: hsl(200deg 18% 51%);
+  --border: hsl(210deg 15% 18%);
+  --maxw: 1080px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+nav{position:sticky;top:0;backdrop-filter:blur(12px);background:rgba(13,16,21,.7);border-bottom:1px solid var(--border);z-index:50}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.02em}
+.logo span{color:var(--magenta)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-muted);font-size:15px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.btn-primary{background:var(--magenta);color:#fff;padding:9px 18px;border-radius:8px;font-weight:600;font-size:14px;transition:transform .15s,box-shadow .2s}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px hsl(326deg 100% 61% / .35)}
+footer{border-top:1px solid var(--border);margin-top:80px;padding:40px 0;color:var(--text-dim);font-size:14px}
+.foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.eyebrow{color:var(--magenta);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.section-title{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.section-sub{color:var(--text-muted);font-size:16px;margin-bottom:36px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;margin-right:6px}
+.tag-css{background:hsl(240deg 95% 62% / .15);color:hsl(240deg 95% 72%)}
+.tag-anim{background:hsl(326deg 100% 61% / .15);color:hsl(326deg 100% 71%)}
+.tag-react{background:hsl(50deg 100% 50% / .15);color:hsl(50deg 100% 60%)}
+.tag-sys{background:hsl(160deg 70% 50% / .15);color:hsl(160deg 70% 60%)}
+
+/* Hero */
+.hero{padding:90px 0 60px;text-align:center}
+.hero h1{font-size:54px;font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:20px}
+.hero h1 .hl{color:var(--magenta);position:relative}
+.hero h1 .hl::after{content:"";position:absolute;left:0;bottom:4px;width:100%;height:8px;background:var(--yellow);z-index:-1;opacity:.5}
+.hero p{font-size:19px;color:var(--text-muted);max-width:580px;margin:0 auto 32px}
+.hero-cta{display:flex;gap:14px;justify-content:center}
+.btn-ghost{border:1px solid var(--border);padding:9px 18px;border-radius:8px;font-weight:600;font-size:14px;color:var(--text-muted);transition:all .2s}
+.btn-ghost:hover{border-color:var(--magenta);color:var(--text)}
+
+.featured{background:linear-gradient(135deg,var(--surface),var(--bg-soft));border:1px solid var(--border);border-radius:16px;padding:36px;margin-bottom:48px;display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center;transition:transform .2s,border-color .2s}
+.featured:hover{transform:translateY(-2px);border-color:var(--magenta)}
+.featured-body h3{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:10px 0 12px;line-height:1.25}
+.featured-body p{color:var(--text-muted);font-size:15px;margin-bottom:16px}
+.featured-meta{display:flex;align-items:center;gap:12px;color:var(--text-dim);font-size:13px}
+.featured-img{height:200px;border-radius:12px;background:linear-gradient(135deg,var(--magenta),var(--blue));display:flex;align-items:center;justify-content:center;font-size:60px}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:26px;transition:transform .2s,border-color .2s;cursor:pointer}
+.card:hover{transform:translateY(-3px);border-color:var(--magenta)}
+.card-tags{margin-bottom:12px;min-height:24px}
+.card h3{font-size:20px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px;line-height:1.3}
+.card p{color:var(--text-muted);font-size:14.5px;margin-bottom:14px}
+.card-meta{display:flex;align-items:center;gap:10px;color:var(--text-dim);font-size:13px}
+.dot{width:3px;height:3px;border-radius:50%;background:var(--text-dim)}
+
+.cats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+.cat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;flex:1;min-width:160px;transition:all .2s}
+.cat:hover{border-color:var(--blue);transform:translateY(-2px)}
+.cat-icon{font-size:24px;margin-bottom:8px}
+.cat-name{font-weight:700;font-size:15px}
+.cat-count{color:var(--text-dim);font-size:13px;margin-top:2px}
+</style></head>
+<body>
+<nav><div class="container nav-inner">
+  <a href="#" class="logo">Aaron<span>'s</span> Blog</a>
+  <div class="nav-links">
+    <a href="#articles">文章</a>
+    <a href="#categories">分类</a>
+    <a href="#about">关于</a>
+    <a href="#" class="btn-primary">订阅 RSS</a>
+  </div>
+</div></nav>
+<div class="container">
+  <section class="hero">
+    <h1>记录技术，<span class="hl">打磨想法</span><br>分享我学到的每件事</h1>
+    <p>这是 Aaron 的个人技术博客。写代码、搞工具、做产品，偶尔讲点产品经理视角的工程思考。</p>
+    <div class="hero-cta">
+      <a href="#articles" class="btn-primary">开始阅读</a>
+      <a href="#about" class="btn-ghost">关于我</a>
+    </div>
+  </section>
+
+  <section id="articles">
+    <div class="eyebrow">最新文章</div>
+    <h2 class="section-title">Articles and Tutorials</h2>
+    <p class="section-sub">深度教程与实践笔记，每篇都力求讲透一个主题</p>
+
+    <div class="featured">
+      <div class="featured-body">
+        <span class="tag tag-anim">动画</span><span class="tag tag-css">CSS</span>
+        <h3>用纯 CSS 实现弹簧动画：linear() 时序函数完全指南</h3>
+        <p>linear() 时序函数是革命性的——它让我们能在原生 CSS 里建模基于物理的运动。但有些坑要注意。本文分享我摸索出的所有实用技巧。</p>
+        <div class="featured-meta"><span>2026-07-25</span><span class="dot" style="display:inline-block"></span><span>12 分钟阅读</span></div>
+      </div>
+      <div class="featured-img">🎯</div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-tags"><span class="tag tag-css">CSS</span></div>
+        <h3>Anchor Positioning 入门：元素吸附终于有了一等公民方案</h3>
+        <p>几十年来，把一个元素粘到另一个元素上一直是 Web 上最棘手的问题之一。CSSWG 终于给出了标准解法。</p>
+        <div class="card-meta"><span>2026-07-20</span><span class="dot"></span><span>8 分钟</span></div>
+      </div>
+      <div class="card">
+        <div class="card-tags"><span class="tag tag-anim">动画</span></div>
+        <h3>滚动驱动动画：用 animation-timeline 创造魔法</h3>
+        <p>新的 Animation Timeline API 让我们无需 JavaScript 就能创建动态滚动动画。真心是个很美的 API。</p>
+        <div class="card-meta"><span>2026-07-15</span><span class="dot"></span><span>10 分钟</span></div>
+      </div>
+      <div class="card">
+        <div class="card-tags"><span class="tag tag-sys">系统</span></div>
+        <h3>Hermes Agent 自动化原理：四层架构实现全自动发布</h3>
+        <p>工具层创作 → Cron 调度 → 脚本执行 → 记忆持久化，让 AI 不碰敏感命令却能自动完成 git push。</p>
+        <div class="card-meta"><span>2026-07-10</span><span class="dot"></span><span>15 分钟</span></div>
+      </div>
+      <div class="card">
+        <div class="card-tags"><span class="tag tag-react">React</span><span class="tag tag-css">CSS</span></div>
+        <h3>SVG 路径交互指南：从正则式天书到可玩玩具</h3>
+        <p>SVG 的 path 元素最强大也最晦涩。本教程拆解它紧凑的正则式语法，并做几个有趣的可视化。</p>
+        <div class="card-meta"><span>2026-07-05</span><span class="dot"></span><span>14 分钟</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="categories" style="margin-top:72px">
+    <div class="eyebrow">按主题浏览</div>
+    <h2 class="section-title">Browse By Category</h2>
+    <p class="section-sub">挑你感兴趣的领域深入</p>
+    <div class="cats">
+      <div class="cat"><div class="cat-icon">🎨</div><div class="cat-name">CSS & 设计</div><div class="cat-count">12 篇</div></div>
+      <div class="cat"><div class="cat-icon">⚡</div><div class="cat-name">动画</div><div class="cat-count">8 篇</div></div>
+      <div class="cat"><div class="cat-icon">⚛️</div><div class="cat-name">React</div><div class="cat-count">15 篇</div></div>
+      <div class="cat"><div class="cat-icon">🤖</div><div class="cat-name">AI & Agent</div><div class="cat-count">9 篇</div></div>
+      <div class="cat"><div class="cat-icon">🛠️</div><div class="cat-name">工具与效率</div><div class="cat-count">6 篇</div></div>
+    </div>
+  </section>
+</div>
+<footer><div class="container foot-inner">
+  <div>© 2026 Aaron · 用 Next.js + MDX 构建</div>
+  <div style="display:flex;gap:20px">
+    <a href="#">GitHub</a><a href="#">Twitter</a><a href="#">RSS</a>
+  </div>
+</div></footer>
+</body></html>

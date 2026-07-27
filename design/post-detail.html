@@ -1,0 +1,300 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>文章详情页 · 设计稿（TOC 开/关）</title>
+<style>
+:root{
+  --magenta: hsl(326deg 100% 61%);
+  --blue: hsl(240deg 95% 62%);
+  --yellow: hsl(50deg 100% 50%);
+  --green: hsl(160deg 70% 50%);
+  --bg: hsl(210deg 15% 6%);
+  --bg-soft: hsl(210deg 15% 10%);
+  --surface: hsl(210deg 20% 13%);
+  --surface-2: hsl(210deg 20% 16%);
+  --text: hsl(0deg 0% 100%);
+  --text-muted: hsl(210deg 20% 77%);
+  --text-dim: hsl(200deg 18% 51%);
+  --border: hsl(210deg 15% 18%);
+  --content-w: 720px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+
+/* 顶部设计稿控制条（仅设计稿用，正式实现不要） */
+.design-bar{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--surface-2);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:16px;font-size:13px;color:var(--text-muted)}
+.design-bar .label{font-weight:700;color:var(--text)}
+.toggle{display:inline-flex;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:3px}
+.toggle button{background:none;border:none;color:var(--text-dim);padding:6px 14px;font-size:13px;font-weight:600;border-radius:6px;cursor:pointer;transition:all .15s}
+.toggle button.active{background:var(--magenta);color:#fff}
+.design-bar .hint{margin-left:auto;color:var(--text-dim);font-size:12px}
+
+/* nav */
+nav{position:sticky;top:0;backdrop-filter:blur(12px);background:rgba(13,16,21,.7);border-bottom:1px solid var(--border);z-index:50}
+.nav-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 24px}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.02em}
+.logo span{color:var(--magenta)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-muted);font-size:15px;font-weight:500}
+.back-link{color:var(--text-muted);font-size:14px;display:inline-flex;align-items:center;gap:6px}
+
+/* ===== 布局：有 TOC（三栏） vs 无 TOC（单栏） ===== */
+.layout{max-width:1280px;margin:0 auto;padding:48px 24px 80px;display:grid;gap:48px;transition:grid-template-columns .3s}
+/* 有 TOC：左目录(220px) + 中正文(720px) + 右留白(剩余) */
+.layout.with-toc{grid-template-columns:220px minmax(0,var(--content-w)) 1fr}
+/* 无 TOC：单栏居中 */
+.layout.no-toc{grid-template-columns:1fr;justify-items:center}
+.layout.no-toc .article-col{max-width:var(--content-w)}
+
+/* TOC 侧栏 */
+.toc{position:sticky;top:88px;align-self:start;max-height:calc(100vh - 120px);overflow-y:auto}
+.toc-title{font-size:12px;font-weight:700;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.toc ul{list-style:none}
+.toc li{margin-bottom:8px}
+.toc a{color:var(--text-muted);font-size:13.5px;line-height:1.45;display:block;padding:3px 0 3px 12px;border-left:2px solid transparent;transition:all .15s}
+.toc a:hover{color:var(--text)}
+.toc a.active{color:var(--magenta);border-left-color:var(--magenta);font-weight:600}
+.toc .sub a{padding-left:24px;font-size:13px;color:var(--text-dim)}
+
+/* 文章头 */
+.breadcrumb{color:var(--text-dim);font-size:13px;margin-bottom:20px}
+.breadcrumb a:hover{color:var(--magenta)}
+.article-tags{display:flex;gap:6px;margin-bottom:18px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px}
+.tag-css{background:hsl(240deg 95% 62% / .15);color:hsl(240deg 95% 72%)}
+.tag-anim{background:hsl(326deg 100% 61% / .15);color:hsl(326deg 100% 71%)}
+.article-title{font-size:40px;font-weight:800;letter-spacing:-.025em;line-height:1.15;margin-bottom:16px}
+.article-excerpt{font-size:19px;color:var(--text-muted);line-height:1.5;margin-bottom:24px}
+.article-meta{display:flex;align-items:center;gap:12px;color:var(--text-dim);font-size:14px;padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:32px}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--magenta),var(--blue));flex-shrink:0}
+.dot{width:3px;height:3px;border-radius:50%;background:var(--text-dim)}
+
+/* 正文排版 */
+.prose{color:var(--text)}
+.prose h2{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:48px 0 16px;scroll-margin-top:88px}
+.prose h3{font-size:21px;font-weight:700;margin:36px 0 12px;scroll-margin-top:88px}
+.prose p{margin-bottom:20px;color:hsl(210deg 15% 88%)}
+.prose strong{color:var(--text);font-weight:700}
+.prose a{color:var(--magenta);text-decoration:underline;text-decoration-color:hsl(326deg 100% 61% / .4);text-underline-offset:3px}
+.prose a:hover{text-decoration-color:var(--magenta)}
+.prose ul,.prose ol{margin:0 0 20px;padding-left:24px}
+.prose li{margin-bottom:8px;color:hsl(210deg 15% 88%)}
+.prose blockquote{border-left:3px solid var(--magenta);padding:4px 0 4px 20px;margin:0 0 20px;color:var(--text-muted);font-style:italic}
+
+/* callout */
+.callout{background:hsl(50deg 100% 50% / .08);border:1px solid hsl(50deg 100% 50% / .25);border-left:3px solid var(--yellow);border-radius:8px;padding:16px 20px;margin:0 0 20px}
+.callout-title{font-weight:700;color:var(--yellow);font-size:14px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.callout p{margin-bottom:0;color:hsl(50deg 30% 90%)}
+.callout.tip{background:hsl(160deg 70% 50% / .08);border-color:hsl(160deg 70% 50% / .25);border-left-color:var(--green)}
+.callout.tip .callout-title{color:var(--green)}
+.callout.tip p{color:hsl(160deg 30% 90%)}
+
+/* 代码块（中配：语法高亮 + 复制按钮，无文件名栏） */
+.code-block{position:relative;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;margin:0 0 20px;overflow:hidden}
+.code-block pre{padding:18px 20px;overflow-x:auto;font-family:"SF Mono",Menlo,Consolas,monospace;font-size:13.5px;line-height:1.7;color:hsl(210deg 15% 85%)}
+.code-block .copy{position:absolute;top:8px;right:8px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);font-size:11px;font-weight:600;padding:4px 9px;border-radius:6px;cursor:pointer;opacity:0;transition:opacity .15s}
+.code-block:hover .copy{opacity:1}
+.code-block .copy:hover{color:var(--text);border-color:var(--magenta)}
+.code-block .kw{color:var(--magenta)}
+.code-block .str{color:var(--yellow)}
+.code-block .fn{color:var(--blue)}
+.code-block .com{color:var(--text-dim);font-style:italic}
+.code-block .num{color:hsl(40deg 100% 60%)}
+
+/* 内联代码 */
+.prose code{background:var(--surface);border:1px solid var(--border);padding:2px 6px;border-radius:5px;font-family:"SF Mono",Menlo,monospace;font-size:.88em;color:var(--magenta)}
+
+/* 文章底部 */
+.article-footer{margin-top:56px;padding-top:32px;border-top:1px solid var(--border)}
+.author-card{display:flex;gap:16px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px}
+.author-card .av{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--magenta),var(--blue));flex-shrink:0}
+.author-card .name{font-weight:700;font-size:15px}
+.author-card .bio{color:var(--text-muted);font-size:13.5px;margin-top:2px}
+
+/* 相关文章 */
+.related{margin-top:40px}
+.related h3{font-size:18px;font-weight:700;margin-bottom:16px}
+.related-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.related-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;transition:all .2s;cursor:pointer}
+.related-card:hover{border-color:var(--magenta);transform:translateY(-2px)}
+.related-card .rt{font-size:14.5px;font-weight:600;line-height:1.35;margin-bottom:6px}
+.related-card .rm{color:var(--text-dim);font-size:12.5px}
+
+/* 阅读进度条（有 TOC 模式下显示） */
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--magenta);z-index:60;transition:width .1s}
+
+/* 响应式：窄屏隐藏 TOC */
+@media(max-width:1024px){
+  .layout.with-toc{grid-template-columns:1fr;justify-items:center}
+  .toc{display:none}
+  .layout.with-toc .article-col{max-width:var(--content-w)}
+}
+</style></head>
+<body>
+
+<!-- 设计稿控制条 -->
+<div class="design-bar">
+  <span class="label">📐 文章详情页设计稿</span>
+  <div class="toggle">
+    <button id="btn-on" class="active" onclick="setToc(true)">TOC: 开（长教程）</button>
+    <button id="btn-off" onclick="setToc(false)">TOC: 关（短文）</button>
+  </div>
+  <span class="hint">← 对应 frontmatter <code style="background:var(--bg);padding:2px 6px;border-radius:4px;color:var(--green)">toc: true/false</code></span>
+</div>
+
+<nav><div class="nav-inner">
+  <a href="#" class="logo">Aaron<span>'s</span> Blog</a>
+  <div class="nav-links">
+    <a href="#">文章</a><a href="#">分类</a><a href="#">关于</a>
+    <a href="#" style="background:var(--magenta);color:#fff;padding:9px 18px;border-radius:8px;font-weight:600;font-size:14px">订阅 RSS</a>
+  </div>
+</div></nav>
+
+<div id="progress" class="progress" style="width:35%"></div>
+
+<div id="layout" class="layout with-toc">
+
+  <!-- TOC 侧栏（toc:false 时隐藏） -->
+  <aside class="toc" id="toc">
+    <div class="toc-title">本页目录</div>
+    <ul>
+      <li><a href="#intro" class="active">引言</a></li>
+      <li><a href="#principle">为什么需要弹性布局</a></li>
+      <li class="sub"><a href="#flex-grow">flex-grow 的秘密</a></li>
+      <li class="sub"><a href="#flex-basis">flex-basis 基准</a></li>
+      <li><a href="#demo">实战演示</a></li>
+      <li><a href="#pitfalls">常见陷阱</a></li>
+      <li><a href="#summary">总结</a></li>
+    </ul>
+  </aside>
+
+  <!-- 正文栏 -->
+  <div class="article-col">
+    <a href="#" class="back-link">← 返回文章列表</a>
+    <div style="height:20px"></div>
+
+    <div class="breadcrumb"><a href="#">首页</a> / <a href="#">CSS</a></div>
+    <div class="article-tags"><span class="tag tag-anim">动画</span><span class="tag tag-css">CSS</span></div>
+    <h1 class="article-title">用纯 CSS 实现弹簧动画：linear() 时序函数完全指南</h1>
+    <p class="article-excerpt">linear() 时序函数是革命性的——它让我们能在原生 CSS 里建模基于物理的运动，而不依赖任何 JavaScript 动画库。本文分享我摸索出的所有实用技巧。</p>
+    <div class="article-meta">
+      <div class="avatar"></div>
+      <span>Aaron</span>
+      <span class="dot"></span>
+      <span>2026-07-25</span>
+      <span class="dot"></span>
+      <span>12 分钟阅读</span>
+    </div>
+
+    <article class="prose">
+      <h2 id="intro">引言</h2>
+      <p>Flexbox 是一种极其强大的布局模式。当我们<strong>真正</strong>理解它的工作原理后，就能构建出会自动响应、按需重排的动态布局。</p>
+      <p>比如，看看下面这个：<a href="#">Adam Argyle 的 codepen</a>用了 <em>零</em> 个 media query 或 container query。它用流体原理创造了一个无缝流动的布局。</p>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 提示</div>
+        <p>本文假设你已经了解 flexbox 基础。如果你是新手，建议先读我之前的 <a href="#">Flexbox 入门</a>。</p>
+      </div>
+
+      <h2 id="principle">为什么需要弹性布局</h2>
+      <p>相关的 CSS 其实很简单：</p>
+
+      <div class="code-block">
+        <button class="copy">复制</button>
+<pre><span class="kw">form</span> {
+  <span class="fn">display</span>: flex;
+  <span class="fn">align-items</span>: flex-end;
+  <span class="fn">flex-wrap</span>: wrap;
+  <span class="fn">gap</span>: <span class="num">16px</span>;
+}
+
+<span class="com">/* 每个输入项会按需伸缩 */</span>
+.<span class="fn">name</span> {
+  <span class="fn">flex-grow</span>: <span class="num">1</span>;
+  <span class="fn">flex-basis</span>: <span class="num">160px</span>;
+}</pre>
+      </div>
+
+      <p>当容器变窄时，<code>.name</code> 字段会收缩到它的 <code>flex-basis</code>；再窄下去，整个表单会换行，而不是溢出。这一切都是<strong>自动</strong>的。</p>
+
+      <h3 id="flex-grow">flex-grow 的秘密</h3>
+      <p><code>flex-grow</code> 决定了可用空间如何分配。默认值 0 意味着"不索取额外空间"。设成 1，元素就会瓜分剩余空间。</p>
+
+      <blockquote>想象一张桌子，每个人先放下自己的餐盘（flex-basis），然后桌上还剩位置，flex-grow 决定谁能伸手去占。</blockquote>
+
+      <div class="callout">
+        <div class="callout-title">⚠️ 注意</div>
+        <p><code>flex-grow</code> 不是比例！它是"瓜分剩余空间的权重"。两个都设 grow:1 是平分，但 grow:2 和 grow:1 不代表 2/3 和 1/3——还要看 basis。</p>
+      </div>
+
+      <h2 id="demo">实战演示</h2>
+      <p>下面是一个完整的可运行示例。试试拖拽分隔线，观察元素如何自适应：</p>
+
+      <ul>
+        <li><strong>flex-grow: 1</strong> — 瓜分所有剩余空间</li>
+        <li><strong>flex-shrink: 1</strong> — 允许收缩</li>
+        <li><strong>flex-basis: 160px</strong> — 起始基准宽度</li>
+      </ul>
+
+      <h2 id="pitfalls">常见陷阱</h2>
+      <p>很多人第一次用 flexbox 会踩这几个坑：</p>
+      <ol>
+        <li>把 <code>flex-grow</code> 当成宽度比例</li>
+        <li>忘记 <code>min-width</code> 会导致无法收缩</li>
+        <li>混淆 <code>align-items</code> 和 <code>justify-content</code> 的轴向</li>
+      </ol>
+
+      <h2 id="summary">总结</h2>
+      <p>Flexbox 的精髓不在记住多少属性，而在理解"可用空间如何分配"这个底层模型。一旦想通了这点，所有属性都会变得自然。</p>
+      <p>希望这篇指南对你有帮助。<a href="#">订阅 RSS</a> 可以收到后续更新。</p>
+    </article>
+
+    <!-- 文章底部 -->
+    <div class="article-footer">
+      <div class="author-card">
+        <div class="av"></div>
+        <div>
+          <div class="name">Aaron</div>
+          <div class="bio">技术型产品经理，写代码 15 年。记录搞懂每件事的过程。</div>
+        </div>
+      </div>
+
+      <div class="related">
+        <h3>相关文章</h3>
+        <div class="related-grid">
+          <div class="related-card">
+            <div class="rt">Anchor Positioning 入门</div>
+            <div class="rm">CSS · 8 分钟</div>
+          </div>
+          <div class="related-card">
+            <div class="rt">滚动驱动动画指南</div>
+            <div class="rm">动画 · 10 分钟</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function setToc(on){
+  const layout=document.getElementById('layout');
+  const toc=document.getElementById('toc');
+  const progress=document.getElementById('progress');
+  document.getElementById('btn-on').classList.toggle('active',on);
+  document.getElementById('btn-off').classList.toggle('active',!on);
+  if(on){
+    layout.classList.add('with-toc');layout.classList.remove('no-toc');
+    toc.style.display='';progress.style.display='';
+  }else{
+    layout.classList.remove('with-toc');layout.classList.add('no-toc');
+    toc.style.display='none';progress.style.display='none';
+  }
+}
+</script>
+</body></html>

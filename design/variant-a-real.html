@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>变体 A · 经典卡片流（真实示例）</title>
+<style>
+:root{
+  --magenta: hsl(326deg 100% 61%);
+  --blue: hsl(240deg 95% 62%);
+  --yellow: hsl(50deg 100% 50%);
+  --green: hsl(160deg 70% 50%);
+  --bg: hsl(210deg 15% 6%);
+  --bg-soft: hsl(210deg 15% 10%);
+  --surface: hsl(210deg 20% 13%);
+  --surface-2: hsl(210deg 20% 16%);
+  --text: hsl(0deg 0% 100%);
+  --text-muted: hsl(210deg 20% 77%);
+  --text-dim: hsl(200deg 18% 51%);
+  --border: hsl(210deg 15% 18%);
+  --content-w: 1000px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:.88em;background:var(--surface);border:1px solid var(--border);padding:2px 6px;border-radius:5px;color:var(--magenta)}
+
+nav{position:sticky;top:0;backdrop-filter:blur(12px);background:rgba(13,16,21,.7);border-bottom:1px solid var(--border);z-index:50}
+.nav-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 24px}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.02em}
+.logo span{color:var(--magenta)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-muted);font-size:15px;font-weight:500}
+.nav-links a:hover{color:var(--text)}
+.cta{background:var(--magenta);color:#fff;padding:9px 18px;border-radius:8px;font-weight:600;font-size:14px;transition:all .15s}
+.cta:hover{filter:brightness(1.1)}
+
+.hero{max-width:1080px;margin:0 auto;padding:80px 24px 60px}
+.hero-main{font-size:52px;font-weight:900;letter-spacing:-.03em;line-height:1.1;margin-bottom:20px;max-width:720px}
+.hero-main span{color:var(--magenta)}
+.hero-sub{font-size:20px;color:var(--text-muted);max-width:540px;line-height:1.6;margin-bottom:32px}
+.hero-actions{display:flex;gap:12px}
+.btn-primary{background:var(--magenta);color:#fff;padding:14px 28px;border-radius:10px;font-weight:700;font-size:16px;border:none;cursor:pointer;transition:all .15s}
+.btn-primary:hover{filter:brightness(1.1)}
+.btn-secondary{background:var(--surface);color:var(--text);padding:14px 28px;border-radius:10px;font-weight:600;font-size:16px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.btn-secondary:hover{border-color:var(--magenta)}
+
+.section-title{font-size:14px;font-weight:700;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px;max-width:1080px;margin-left:auto;margin-right:auto;padding:0 24px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:1080px;margin:0 auto;padding:0 24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all .2s}
+.card:hover{border-color:var(--magenta);transform:translateY(-2px)}
+.card.tag{font-size:12px;font-weight:600;color:var(--blue);margin-bottom:8px}
+.card.tag.agent{color:var(--green)}
+.card.tag.memory{color:var(--yellow)}
+.card-title{font-size:18px;font-weight:700;line-height:1.4;margin-bottom:8px;color:var(--text)}
+.card-meta{font-size:13px;color:var(--text-dim);margin-bottom:12px}
+.card-excerpt{font-size:14px;color:var(--text-muted);line-height:1.6}
+
+.category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1080px;margin:0 auto;padding:0 24px;margin-bottom:60px}
+.category-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;transition:all .2s}
+.category-card:hover{border-color:var(--magenta)}
+.category-count{font-size:28px;font-weight:800;color:var(--text);margin-bottom:4px}
+.category-name{font-size:13px;color:var(--text-muted)}
+
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1080px;margin:0 auto;padding:0 24px}
+.stat-box{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:24px}
+.stat-value{font-size:36px;font-weight:900;color:var(--magenta);margin-bottom:4px}
+.stat-label{font-size:14px;color:var(--text-muted)}
+</style></head>
+<body>
+
+<nav><div class="nav-inner">
+  <a href="#" class="logo">Aaron<span>'s</span> Blog</a>
+  <div class="nav-links">
+    <a href="#">文章</a><a href="#">分类</a><a href="#">关于</a>
+    <a href="#" class="cta">订阅 RSS</a>
+  </div>
+</div></nav>
+
+<div class="hero">
+  <div class="hero-main">记录智能体实践，<span>打磨技术理解</span></div>
+  <div class="hero-sub">
+    这里的文章都是我真实踩坑后的复盘——从 Hermes 四层架构到 Hindsight 语义记忆，从 DNS 排查到 Lark API 隔离。每篇都力求把复杂的事讲清楚。
+  </div>
+  <div class="hero-actions">
+    <button class="btn-primary">浏览文章</button>
+    <button class="btn-secondary">关于我</button>
+  </div>
+</div>
+
+<div class="section-title">Featured</div>
+<div class="grid">
+  <div class="card">
+    <div class="card tag agent">智能体</div>
+    <div class="card-title">Hermes Agent 自动化原理揭秘：四层架构实现全自动博客发布</div>
+    <div class="card-meta">2026-07-24 · 12 分钟</div>
+    <div class="card-excerpt">
+      Cron 启动独立进程不受 Tirith 安全策略约束，这是能力也是洞。文章剖析了 Hermes 的四层架构（编排/技能/安全/应用）如何协同，并通过实际案例说明自动化发布链路的设计与风险控制。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card tag memory">记忆</div>
+    <div class="card-title">本地长期语义记忆：Hindsight 的触发方式与工具边界</div>
+    <div class="card-meta">2026-07-06 · 8 分钟</div>
+    <div class="card-excerpt">
+      Hindsight 不是问答机器，而是基于 DeepSeek 向量化的本地语义检索库。通过 Docker 容器运行，支持 retain/recall/reflect 三种操作。关键在于存储准入判断——调研对比结论和踩坑总结会自动 retain，但日常对话不会。
+    </div>
+  </div>
+</div>
+
+<div style="height:48px"></div>
+
+<div class="section-title">Articles and Tutorials</div>
+<div class="grid">
+  <div class="card">
+    <div class="card tag">工具</div>
+    <div class="card-title">Next.js 博客部署到上线全流程（Vercel + 自定义域名）</div>
+    <div class="card-meta">2026-07-27 · 18 分钟</div>
+    <div class="card-excerpt">
+      从零部署 Next.js blog-starter 到 Vercel，绑定自定义域名并解决 DNS 排查弯路。核心教训：域名所有权锁需 TXT 验证、whois 的 NS 只反映注册商信息、单一来源查询结果 ≠ 真相。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card tag">智能体</div>
+    <div class="card-title"> omp 编码 Agent 接入实战：Hermes 委派链路验证</div>
+    <div class="card-meta">2026-07-22 · 6 分钟</div>
+    <div class="card-excerpt">
+      omp 是纯文本编码模型，不支持视觉，但读写文件和跨文件重构很强。我用它验证了委派链路并分析了测试覆盖，但"看图片"这种任务超出了它的能力范围。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card tag">飞书</div>
+    <div class="card-title">Lark Skills 隔离重构：从全局 npm 到 Hermes 私有</div>
+    <div class="card-meta">2026-07-25 · 10 分钟</div>
+    <div class="card-excerpt">
+      把 Lark 能力从全局 npm 隔离为 Hermes 私有——skills 仅装 hermes-agent，lark-cli 装到 ~/.hermes/bin/。实测剪藏链路全通，其他 agent 不可见。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card tag">设计</div>
+    <div class="card-title">冀北架构智能运营工具：智能体面板原型</div>
+    <div class="card-meta">2026-06-23 · 15 分钟</div>
+    <div class="card-excerpt">
+      用 prototype-skeleton 实现智能体面板：左侧 agent 列表、右侧 chat 对话区、阶段切换（可研/设计/上线）、快捷提问。支持交互验证，数据层与渲染层解耦。
+    </div>
+  </div>
+</div>
+
+<div style="height:60px"></div>
+
+<div class="section-title">Browse By Category</div>
+<div class="category-grid">
+  <div class="category-card">
+    <div class="category-count">12</div>
+    <div class="category-name">智能体</div>
+  </div>
+  <div class="category-card">
+    <div class="category-count">8</div>
+    <div class="category-name">工具</div>
+  </div>
+  <div class="category-card">
+    <div class="category-count">5</div>
+    <div class="category-name">飞书</div>
+  </div>
+  <div class="category-card">
+    <div class="category-count">7</div>
+    <div class="category-name">设计</div>
+  </div>
+</div>
+
+<div style="height:48px"></div>
+
+<div class="section-title">Popular Content</div>
+<div class="stats-grid">
+  <div class="stat-box">
+    <div class="stat-value">32</div>
+    <div class="stat-label">文章总数</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-value">12</div>
+    <div class="stat-label">分类</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-value">4.2K</div>
+    <div class="stat-label">读者</div>
+  </div>
+</div>
+
+<div style="height:80px"></div>
+
+</body></html>

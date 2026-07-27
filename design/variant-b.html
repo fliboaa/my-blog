@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>变体 B · 杂志长文风</title>
+<style>
+:root{
+  --magenta: hsl(326deg 100% 61%);
+  --blue: hsl(240deg 95% 62%);
+  --yellow: hsl(50deg 100% 50%);
+  --bg: hsl(210deg 15% 6%);
+  --bg-soft: hsl(210deg 15% 10%);
+  --surface: hsl(210deg 20% 13%);
+  --text: hsl(0deg 0% 100%);
+  --text-muted: hsl(210deg 20% 77%);
+  --text-dim: hsl(200deg 18% 51%);
+  --border: hsl(210deg 15% 18%);
+  --maxw: 1080px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+nav{position:sticky;top:0;backdrop-filter:blur(12px);background:rgba(13,16,21,.7);border-bottom:1px solid var(--border);z-index:50}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.02em}
+.logo span{color:var(--magenta)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-muted);font-size:15px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.btn-primary{background:var(--magenta);color:#fff;padding:9px 18px;border-radius:8px;font-weight:600;font-size:14px;transition:transform .15s,box-shadow .2s}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px hsl(326deg 100% 61% / .35)}
+footer{border-top:1px solid var(--border);margin-top:80px;padding:40px 0;color:var(--text-dim);font-size:14px}
+.foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.eyebrow{color:var(--magenta);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.section-title{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;margin-right:6px}
+.tag-css{background:hsl(240deg 95% 62% / .15);color:hsl(240deg 95% 72%)}
+.tag-anim{background:hsl(326deg 100% 61% / .15);color:hsl(326deg 100% 71%)}
+.tag-react{background:hsl(50deg 100% 50% / .15);color:hsl(50deg 100% 60%)}
+.tag-sys{background:hsl(160deg 70% 50% / .15);color:hsl(160deg 70% 60%)}
+
+/* Hero - 左右分栏 */
+.hero-split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding:72px 0 56px;min-height:520px}
+.hero-text h1{font-size:62px;font-weight:800;letter-spacing:-.035em;line-height:1.05;margin-bottom:24px}
+.hero-text h1 .hl{color:var(--magenta)}
+.hero-text h1 .underline{position:relative;display:inline-block}
+.hero-text h1 .underline::after{content:"";position:absolute;left:0;bottom:2px;width:100%;height:10px;background:var(--yellow);opacity:.45;z-index:-1}
+.hero-text p{font-size:18px;color:var(--text-muted);margin-bottom:28px;max-width:480px}
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.badge{font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:6px;background:var(--surface);border:1px solid var(--border);color:var(--text-muted)}
+.hero-visual{position:relative;height:420px;border-radius:20px;overflow:hidden;background:radial-gradient(circle at 30% 20%,hsl(326deg 100% 61% / .4),transparent 50%),radial-gradient(circle at 70% 70%,hsl(240deg 95% 62% / .35),transparent 50%),var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.hero-visual .code-mock{font-family:"SF Mono",Menlo,monospace;font-size:13px;color:var(--text-muted);background:rgba(0,0,0,.4);padding:24px 28px;border-radius:12px;line-height:1.8;border:1px solid var(--border)}
+.hero-visual .code-mock .kw{color:var(--magenta)}
+.hero-visual .code-mock .str{color:var(--yellow)}
+.hero-visual .code-mock .fn{color:var(--blue)}
+
+.post-list{margin-top:8px}
+.post-row{display:grid;grid-template-columns:80px 1fr auto;gap:24px;align-items:start;padding:28px 0;border-top:1px solid var(--border);transition:background .2s;cursor:pointer}
+.post-row:hover{background:hsl(326deg 100% 61% / .03)}
+.post-row:hover .post-title{color:var(--magenta)}
+.post-date{color:var(--text-dim);font-size:13px;font-weight:600;text-align:right;padding-top:4px}
+.post-date .yr{display:block;font-size:11px;opacity:.6}
+.post-main{min-width:0}
+.post-tags{margin-bottom:8px;min-height:22px}
+.post-title{font-size:22px;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;line-height:1.3;transition:color .2s}
+.post-excerpt{color:var(--text-muted);font-size:14.5px}
+.post-time{color:var(--text-dim);font-size:13px;white-space:nowrap;padding-top:4px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:56px 0;border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.stat{padding:32px 28px;border-right:1px solid var(--border);text-align:center}
+.stat:last-child{border-right:none}
+.stat-num{font-size:40px;font-weight:800;letter-spacing:-.03em;background:linear-gradient(135deg,var(--magenta),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat-label{color:var(--text-muted);font-size:14px;margin-top:6px}
+
+@media(max-width:768px){.hero-split{grid-template-columns:1fr}.hero-text h1{font-size:42px}.post-row{grid-template-columns:1fr;gap:8px}.stats{grid-template-columns:1fr}}
+</style></head>
+<body>
+<nav><div class="container nav-inner">
+  <a href="#" class="logo">Aaron<span>'s</span> Blog</a>
+  <div class="nav-links">
+    <a href="#articles">文章</a>
+    <a href="#categories">分类</a>
+    <a href="#about">关于</a>
+    <a href="#" class="btn-primary">订阅 RSS</a>
+  </div>
+</div></nav>
+<div class="container">
+  <section class="hero-split">
+    <div class="hero-text">
+      <div class="hero-badges">
+        <span class="badge">技术型产品经理</span>
+        <span class="badge">AI / Agent</span>
+        <span class="badge">前端工程</span>
+      </div>
+      <h1>把<span class="hl">复杂的</span>事<br>讲得<span class="underline">简单有趣</span></h1>
+      <p>我写代码 15 年，后一半时间在教。这是 Aaron 的技术博客——记录我搞懂每件事的过程，附上可复用的实践。</p>
+      <a href="#articles" class="btn-primary">读最新文章 →</a>
+    </div>
+    <div class="hero-visual">
+      <div class="code-mock">
+<span class="kw">export</span> <span class="kw">function</span> <span class="fn">Post</span>() {<br>
+&nbsp;&nbsp;<span class="kw">return</span> <span class="str">"想法"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;.<span class="fn">write</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.<span class="fn">refine</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.<span class="fn">publish</span>();<br>
+}
+      </div>
+    </div>
+  </section>
+
+  <section id="articles">
+    <div class="eyebrow">文章 &amp; 教程</div>
+    <h2 class="section-title">最新写作</h2>
+    <div class="post-list">
+      <div class="post-row">
+        <div class="post-date">07.25<span class="yr">2026</span></div>
+        <div class="post-main">
+          <div class="post-tags"><span class="tag tag-anim">动画</span><span class="tag tag-css">CSS</span></div>
+          <div class="post-title">用纯 CSS 实现弹簧动画：linear() 时序函数完全指南</div>
+          <div class="post-excerpt">linear() 是革命性的——能在原生 CSS 里建模基于物理的运动。但有些坑要注意。</div>
+        </div>
+        <div class="post-time">12 分钟</div>
+      </div>
+      <div class="post-row">
+        <div class="post-date">07.20<span class="yr">2026</span></div>
+        <div class="post-main">
+          <div class="post-tags"><span class="tag tag-css">CSS</span></div>
+          <div class="post-title">Anchor Positioning 入门：元素吸附终于有了一等公民方案</div>
+          <div class="post-excerpt">几十年来把元素粘到元素上一直是最棘手的问题之一，CSSWG 终于给出了标准解法。</div>
+        </div>
+        <div class="post-time">8 分钟</div>
+      </div>
+      <div class="post-row">
+        <div class="post-date">07.15<span class="yr">2026</span></div>
+        <div class="post-main">
+          <div class="post-tags"><span class="tag tag-anim">动画</span></div>
+          <div class="post-title">滚动驱动动画：用 animation-timeline 创造魔法</div>
+          <div class="post-excerpt">新的 Animation Timeline API 让我们无需 JavaScript 就能创建动态滚动动画。</div>
+        </div>
+        <div class="post-time">10 分钟</div>
+      </div>
+      <div class="post-row">
+        <div class="post-date">07.10<span class="yr">2026</span></div>
+        <div class="post-main">
+          <div class="post-tags"><span class="tag tag-sys">系统</span></div>
+          <div class="post-title">Hermes Agent 自动化原理：四层架构实现全自动发布</div>
+          <div class="post-excerpt">工具层 → Cron 调度 → 脚本执行 → 记忆持久化，让 AI 不碰敏感命令却自动完成 git push。</div>
+        </div>
+        <div class="post-time">15 分钟</div>
+      </div>
+      <div class="post-row">
+        <div class="post-date">07.05<span class="yr">2026</span></div>
+        <div class="post-main">
+          <div class="post-tags"><span class="tag tag-react">React</span></div>
+          <div class="post-title">SVG 路径交互指南：从正则式天书到可玩玩具</div>
+          <div class="post-excerpt">SVG 的 path 元素最强大也最晦涩，本教程拆解其紧凑语法并做可视化。</div>
+        </div>
+        <div class="post-time">14 分钟</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num">50+</div><div class="stat-label">深度文章</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">主题分类</div></div>
+    <div class="stat"><div class="stat-num">2.4k</div><div class="stat-label">月度读者</div></div>
+  </div>
+</div>
+<footer><div class="container foot-inner">
+  <div>© 2026 Aaron · 用 Next.js + MDX 构建</div>
+  <div style="display:flex;gap:20px">
+    <a href="#">GitHub</a><a href="#">Twitter</a><a href="#">RSS</a>
+  </div>
+</div></footer>
+</body></html>
