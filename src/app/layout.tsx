@@ -1,5 +1,6 @@
 import { Footer } from "@/app/_components/footer";
 import { Navbar } from "./_components/navbar";
+import { getAllPosts } from "@/lib/api";
 import type { Metadata } from "next";
 
 import "./globals.css";
@@ -33,7 +34,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Navbar />
+        <Navbar posts={getAllPosts()} />
         <main>{children}</main>
         <Footer />
       </body>

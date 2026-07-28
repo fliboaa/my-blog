@@ -2,21 +2,14 @@ import Container from "@/app/_components/container";
 import { Hero } from "@/app/_components/hero";
 import { FeaturedPost } from "@/app/_components/featured-post";
 import { PostCard } from "@/app/_components/post-card";
-import { CategoryGrid } from "@/app/_components/category-grid";
 import { getAllPosts } from "@/lib/api";
 
 export default function Index() {
   const allPosts = getAllPosts();
   const featured = allPosts.find((p) => p.featured) ?? allPosts[0];
-  const rest = allPosts.filter((p) => p.slug !== featured.slug);
-
-  // 按标签统计实际篇数
-  const counts: Record<string, number> = {};
-  allPosts.forEach((p) => {
-    p.tags?.forEach((t) => {
-      counts[t] = (counts[t] || 0) + 1;
-    });
-  });
+  // 首页只展示 Featured + 4 张卡片，其余在 /articles 浏览
+  const rest = allPosts.filter((p) => p.slug !== featured.slug).slice(0, 4);
+  const hasMore = allPosts.length > rest.length + 1;
 
   return (
     <>
@@ -36,13 +29,14 @@ export default function Index() {
               ))}
             </div>
           )}
-        </section>
 
-        <section id="categories" style={{ marginTop: 72 }}>
-          <div className="eyebrow">按主题浏览</div>
-          <h2 className="section-title">Browse By Category</h2>
-          <p className="section-sub">挑你感兴趣的方向深入</p>
-          <CategoryGrid counts={counts} />
+          {hasMore && (
+            <div className="view-all">
+              <a href="/articles" className="btn-ghost">
+                查看全部文章 →
+              </a>
+            </div>
+          )}
         </section>
       </Container>
     </>
