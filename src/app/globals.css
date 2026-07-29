@@ -240,6 +240,26 @@ footer.site-footer{border-top:1px solid var(--border);margin-top:80px;padding:40
 
 /* 首页"查看全部"入口 */
 .view-all{text-align:center;margin-top:48px}
+/* 移动端汉堡菜单 + 抽屉 */
+.nav-mobile-controls{display:none;align-items:center;gap:10px}
+.hamburger{display:none;background:none;border:none;cursor:pointer;width:36px;height:36px;flex-direction:column;justify-content:center;align-items:center;gap:4px}
+.ham-line{display:block;width:20px;height:2px;background:var(--text);border-radius:1px;transition:transform .2s,opacity .2s}
+.ham-line.open:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.ham-line.open:nth-child(2){opacity:0}
+.ham-line.open:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55}
+.mobile-drawer{position:fixed;top:0;right:0;width:min(320px,85vw);height:100vh;background:var(--bg);border-left:1px solid var(--border);z-index:56;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:20px;box-shadow:-8px 0 32px var(--shadow)}
+.mobile-search-wrap .search-input{width:100%}
+.mobile-search-wrap .search-results{position:fixed;left:20px;right:20px;min-width:0;max-width:none}
+.mobile-links{display:flex;flex-direction:column;gap:16px}
+.mobile-links>a{color:var(--text);font-size:17px;font-weight:600;padding:8px 0}
+.mobile-cat-label{color:var(--text-dim);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
+.mobile-cats{display:flex;flex-direction:column;gap:4px}
+.mobile-cat-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:15px;color:var(--text-muted);background:var(--surface)}
+.mobile-cat-item .ci{font-size:18px;width:22px;text-align:center}
+.mobile-cat-item .cn{flex:1}
+.mobile-cat-item .ccount{color:var(--text-dim);font-size:13px}
+.mobile-rss{text-align:center;margin-top:8px}
 
 /* 响应式 */
 @media(max-width:1024px){
@@ -253,6 +273,42 @@ footer.site-footer{border-top:1px solid var(--border);margin-top:80px;padding:40
   .hero h1{font-size:40px}
   .article-title{font-size:30px}
   .nav-links{gap:16px}
+}
+/* 手机：≤768px 切换为汉堡菜单，桌面导航隐藏 */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-mobile-controls{display:flex}
+  .hamburger{display:flex}
+  .hero{padding:60px 0 40px}
+  .hero h1{font-size:32px}
+  .hero p{font-size:16px}
+  .post-layout{padding:32px 20px 60px;gap:24px}
+  .article-title{font-size:26px}
+  .article-excerpt{font-size:17px}
+  .featured{padding:24px}
+  .featured-body h3{font-size:22px}
+  .card{padding:20px}
+  .section-title{font-size:24px}
+  .container{padding:0 20px}
+  .cat-page{padding:40px 0 60px}
+  .cat-page-title{font-size:28px}
+  /* prose 正文收窄边距，保证手机阅读舒适 */
+  .prose h2{font-size:23px;margin:36px 0 12px}
+  .prose h3{font-size:19px;margin:28px 0 10px}
+  .prose pre{padding:14px 16px}
+  .prose pre code{font-size:12.5px}
+  .prose ul,.prose ol{padding-left:20px}
+  .prose blockquote{padding-left:16px}
+  /* 元信息行允许换行，防止窄屏溢出 */
+  .article-meta{flex-wrap:wrap;gap:8px}
+  .featured-meta{flex-wrap:wrap;gap:8px}
+  .card-meta{flex-wrap:wrap;gap:8px}
+}
+/* 极窄：≤390px 字号再降，避免标题溢出 */
+@media(max-width:390px){
+  .hero h1{font-size:28px}
+  .article-title{font-size:23px}
+  .logo{font-size:17px}
 }
 
 /* Mermaid 图表样式 */
