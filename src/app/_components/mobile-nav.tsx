@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type Tag } from "@/interfaces/post";
@@ -15,6 +16,7 @@ type Props = {
 
 export function MobileNav({ posts, tagCounts }: Props) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
   // 路由变化时关闭抽屉
@@ -30,6 +32,11 @@ export function MobileNav({ posts, tagCounts }: Props) {
     };
   }, [open]);
 
+  // portal 必须在客户端渲染后才能访问 document.body
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <>
       <button
@@ -43,8 +50,7 @@ export function MobileNav({ posts, tagCounts }: Props) {
         <span className={`ham-line ${open ? "open" : ""}`} />
         <span className={`ham-line ${open ? "open" : ""}`} />
       </button>
-
-      {open && (
+      {open && mounted && createPortal(
         <>
           <div className="mobile-overlay" onClick={() => setOpen(false)} />
           <div className="mobile-drawer">
@@ -73,7 +79,8 @@ export function MobileNav({ posts, tagCounts }: Props) {
               </Link>
             </nav>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </>
   );

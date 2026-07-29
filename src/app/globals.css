@@ -299,6 +299,13 @@ footer.site-footer{border-top:1px solid var(--border);margin-top:80px;padding:40
   .prose pre code{font-size:12.5px}
   .prose ul,.prose ol{padding-left:20px}
   .prose blockquote{padding-left:16px}
+  /* grid item 防溢出：1024 断点给 .article-col 设了 max-width:720px，
+     窄屏必须用同等优先级的选择器覆盖回 100%，否则宽内容(代码块)撑出视口 */
+  .post-layout.with-toc .article-col{min-width:0;max-width:100%}
+  .post-layout.no-toc .article-col{max-width:100%}
+  .prose{max-width:100%;overflow-wrap:break-word;word-break:break-word}
+  /* 代码块横向滚动，绝不撑开父容器 */
+  .prose pre{max-width:100%}
   /* 元信息行允许换行，防止窄屏溢出 */
   .article-meta{flex-wrap:wrap;gap:8px}
   .featured-meta{flex-wrap:wrap;gap:8px}
