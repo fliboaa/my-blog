@@ -56,8 +56,12 @@ export function getPostBySlug(slug: string): Post | undefined {
   };
 }
 
+// 模块级缓存：getAllPosts 在构建期被多个页面/路由反复调用，
+// 缓存避免每次都 readdirSync + readFileSync + gray-matter 解析。
+let _allPostsCache: Post[] | null = null;
 export function getAllPosts(): Post[] {
   const slugs = getPostSlugs();
+  if (_allPostsCache) return _allPostsCache;
   const posts = slugs
     .map((slug) => getPostBySlug(slug))
     .filter((p): p is Post => p !== undefined)
@@ -67,6 +71,7 @@ export function getAllPosts(): Post[] {
       if (post1.date < post2.date) return 1;
       return 0;
     });
+  _allPostsCache = posts;
   return posts;
 }
 

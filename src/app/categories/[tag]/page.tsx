@@ -2,9 +2,11 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPostMeta } from "@/lib/api";
 import { SLUG_TAG, TAG_META } from "@/lib/tags";
+import { paginate } from "@/lib/pagination";
 import { PostListPagination } from "@/app/_components/post-list-pagination";
+import { TagBadge } from "@/app/_components/tag-badge";
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 6;
 
 type Props = {
   params: Promise<{ tag: string }>;
@@ -19,10 +21,7 @@ export default async function CategoryPage(props: Props) {
 
   const all = getAllPostMeta().filter((p) => p.tags?.includes(tag));
   const meta = TAG_META[tag];
-  const page = Math.max(1, parseInt(pageStr || "1", 10));
-  const totalPages = Math.ceil(all.length / PAGE_SIZE);
-  const curPage = Math.min(page, totalPages || 1);
-  const posts = all.slice((curPage - 1) * PAGE_SIZE, curPage * PAGE_SIZE);
+  const { items: posts, curPage, totalPages } = paginate(all, pageStr, PAGE_SIZE);
 
   return (
     <div className="container cat-page">
@@ -36,7 +35,7 @@ export default async function CategoryPage(props: Props) {
         {posts.map((p) => (
           <a key={p.slug} href={`/posts/${p.slug}`} className="card">
             <div className="card-tags">
-              <span className={`tag tag-${tagClass(tag)}`}>{tag}</span>
+              <TagBadge tag={tag} />
             </div>
             <h3>{p.title}</h3>
             <p>{p.excerpt}</p>
@@ -57,11 +56,6 @@ export default async function CategoryPage(props: Props) {
   );
 }
 
-function tagClass(tag: string) {
-  return (
-    { 智能体: "agent", "LLM 基础": "llm", 产品方法论: "pm", 实战工程: "eng" } as Record<string, string>
-  )[tag] || "agent";
-}
 
 export function generateStaticParams() {
   return Object.keys(SLUG_TAG).map((slug) => ({ tag: slug }));

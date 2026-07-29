@@ -16,6 +16,14 @@ export const SLUG_TAG: Record<string, Tag> = Object.fromEntries(
   ]),
 );
 
+// Tag → CSS 着色 class 映射（与 globals.css 的 .tag-* 对应）
+export const TAG_CLASS: Record<Tag, string> = {
+  智能体: "tag-agent",
+  "LLM 基础": "tag-llm",
+  产品方法论: "tag-pm",
+  实战工程: "tag-eng",
+};
+
 export const TAG_META: Record<Tag, { icon: string; desc: string }> = {
   智能体: {
     icon: "🤖",

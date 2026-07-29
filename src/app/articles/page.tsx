@@ -2,8 +2,9 @@ import { getAllPostMeta } from "@/lib/api";
 import { TagBadge } from "@/app/_components/tag-badge";
 import { PostListPagination } from "@/app/_components/post-list-pagination";
 import { TAG_SLUG } from "@/lib/tags";
+import { paginate } from "@/lib/pagination";
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 6;
 
 type Props = {
   searchParams: Promise<{ page?: string }>;
@@ -12,10 +13,7 @@ type Props = {
 export default async function ArticlesPage(props: Props) {
   const { page: pageStr } = await props.searchParams;
   const all = getAllPostMeta();
-  const page = Math.max(1, parseInt(pageStr || "1", 10));
-  const totalPages = Math.ceil(all.length / PAGE_SIZE);
-  const curPage = Math.min(page, totalPages || 1);
-  const posts = all.slice((curPage - 1) * PAGE_SIZE, curPage * PAGE_SIZE);
+  const { items: posts, curPage, totalPages } = paginate(all, pageStr, PAGE_SIZE);
 
   return (
     <div className="container cat-page">
