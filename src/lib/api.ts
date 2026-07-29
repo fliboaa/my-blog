@@ -21,11 +21,11 @@ export function getPostSlugs() {
   return fs.readdirSync(postsDirectory).filter((slug) => slug.endsWith(".md"));
 }
 
-export function getPostBySlug(slug: string): Post {
+export function getPostBySlug(slug: string): Post | undefined {
   const realSlug = slug.replace(/\.md$/, "");
   const fullPath = join(postsDirectory, `${realSlug}.md`);
   if (!fs.existsSync(fullPath)) {
-    throw new Error(`Post not found: _posts/${realSlug}.md`);
+    return undefined;
   }
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
@@ -60,6 +60,7 @@ export function getAllPosts(): Post[] {
   const slugs = getPostSlugs();
   const posts = slugs
     .map((slug) => getPostBySlug(slug))
+    .filter((p): p is Post => p !== undefined)
     // sort posts by date in descending order；同日期返回 0 保证排序稳定
     .sort((post1, post2) => {
       if (post1.date > post2.date) return -1;
