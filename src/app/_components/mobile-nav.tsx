@@ -50,37 +50,45 @@ export function MobileNav({ posts, tagCounts }: Props) {
         <span className={`ham-line ${open ? "open" : ""}`} />
         <span className={`ham-line ${open ? "open" : ""}`} />
       </button>
-      {open && mounted && createPortal(
+      {mounted && (
         <>
-          <div className="mobile-overlay" onClick={() => setOpen(false)} />
-          <div className="mobile-drawer">
-            <div className="mobile-search-wrap">
-              <SearchBox posts={posts} />
-            </div>
-            <nav className="mobile-links">
-              <Link href="/articles">文章</Link>
-              <div className="mobile-cat-label">分类</div>
-              <div className="mobile-cats">
-                {(Object.keys(TAG_SLUG) as Tag[]).map((tag) => (
-                  <Link
-                    key={tag}
-                    href={`/categories/${TAG_SLUG[tag]}`}
-                    className="mobile-cat-item"
-                  >
-                    <span className="ci">{TAG_META[tag].icon}</span>
-                    <span className="cn">{tag}</span>
-                    <span className="ccount">{tagCounts[tag] || 0} 篇</span>
-                  </Link>
-                ))}
+          {createPortal(
+            <div
+              className={`mobile-overlay ${open ? "open" : ""}`}
+              onClick={() => setOpen(false)}
+            />,
+            document.body,
+          )}
+          {createPortal(
+            <div className={`mobile-drawer ${open ? "open" : ""}`}>
+              <div className="mobile-search-wrap">
+                <SearchBox posts={posts} />
               </div>
-              <Link href="/#about">关于</Link>
-              <Link href="/#rss" className="btn-primary mobile-rss">
-                订阅 RSS
-              </Link>
-            </nav>
-          </div>
-        </>,
-        document.body
+              <nav className="mobile-links">
+                <Link href="/articles">文章</Link>
+                <div className="mobile-cat-label">分类</div>
+                <div className="mobile-cats">
+                  {(Object.keys(TAG_SLUG) as Tag[]).map((tag) => (
+                    <Link
+                      key={tag}
+                      href={`/categories/${TAG_SLUG[tag]}`}
+                      className="mobile-cat-item"
+                    >
+                      <span className="ci">{TAG_META[tag].icon}</span>
+                      <span className="cn">{tag}</span>
+                      <span className="ccount">{tagCounts[tag] || 0} 篇</span>
+                    </Link>
+                  ))}
+                </div>
+                <Link href="/#about">关于</Link>
+                <Link href="/#rss" className="btn-primary mobile-rss">
+                  订阅 RSS
+                </Link>
+              </nav>
+            </div>,
+            document.body,
+          )}
+        </>
       )}
     </>
   );

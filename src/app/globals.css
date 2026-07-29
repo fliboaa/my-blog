@@ -222,7 +222,7 @@ footer.site-footer{border-top:1px solid var(--border);margin-top:80px;padding:40
 .sr-mark{background:hsl(326deg 100% 61% / .3);color:var(--text);border-radius:2px}
 
 /* 分类页 / 全部文章页 */
-.cat-page{padding:60px 0 80px;max-width:var(--content-w);margin:0 auto}
+.cat-page{padding:60px 24px 80px;max-width:var(--content-w);margin:0 auto}
 .back-home{display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);font-size:14px;margin-bottom:20px}
 .back-home:hover{color:var(--magenta)}
 .cat-page-head{margin-bottom:40px}
@@ -247,8 +247,10 @@ footer.site-footer{border-top:1px solid var(--border);margin-top:80px;padding:40
 .ham-line.open:nth-child(1){transform:translateY(6px) rotate(45deg)}
 .ham-line.open:nth-child(2){opacity:0}
 .ham-line.open:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
-.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55}
-.mobile-drawer{position:fixed;top:0;right:0;width:min(320px,85vw);height:100vh;background:var(--bg);border-left:1px solid var(--border);z-index:56;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:20px;box-shadow:-8px 0 32px var(--shadow)}
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55;opacity:0;visibility:hidden;transition:opacity .8s ease,visibility .8s ease}
+.mobile-overlay.open{opacity:1;visibility:visible}
+.mobile-drawer{position:fixed;top:0;right:0;width:min(320px,85vw);height:100vh;background:var(--bg);border-left:1px solid var(--border);z-index:56;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:20px;box-shadow:-8px 0 32px var(--shadow);transform:translateX(100%);transition:transform .8s ease}
+.mobile-drawer.open{transform:translateX(0)}
 .mobile-search-wrap .search-input{width:100%}
 .mobile-search-wrap .search-results{position:fixed;left:20px;right:20px;min-width:0;max-width:none}
 .mobile-links{display:flex;flex-direction:column;gap:16px}
@@ -290,7 +292,7 @@ footer.site-footer{border-top:1px solid var(--border);margin-top:80px;padding:40
   .card{padding:20px}
   .section-title{font-size:24px}
   .container{padding:0 20px}
-  .cat-page{padding:40px 0 60px}
+  .cat-page{padding:40px 20px 60px}
   .cat-page-title{font-size:28px}
   /* prose 正文收窄边距，保证手机阅读舒适 */
   .prose h2{font-size:23px;margin:36px 0 12px}
