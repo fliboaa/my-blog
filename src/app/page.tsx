@@ -2,10 +2,10 @@ import Container from "@/app/_components/container";
 import { Hero } from "@/app/_components/hero";
 import { FeaturedPost } from "@/app/_components/featured-post";
 import { PostCard } from "@/app/_components/post-card";
-import { getAllPosts } from "@/lib/api";
+import { getAllPostMeta } from "@/lib/api";
 
 export default function Index() {
-  const allPosts = getAllPosts();
+  const allPosts = getAllPostMeta();
   const featured = allPosts.find((p) => p.featured) ?? allPosts[0];
   // 首页只展示 Featured + 4 张卡片，其余在 /articles 浏览
   const rest = allPosts.filter((p) => p.slug !== featured.slug).slice(0, 4);

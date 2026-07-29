@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllPosts, getPostBySlug } from "@/lib/api";
+import { getPostBySlug, getAllPostMeta } from "@/lib/api";
 import markdownToHtml from "@/lib/markdownToHtml";
 import { TagBadge } from "@/app/_components/tag-badge";
 import DateFormatter from "@/app/_components/date-formatter";
@@ -98,6 +98,6 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  const posts = getAllPosts();
+  const posts = getAllPostMeta();
   return posts.map((post) => ({ slug: post.slug }));
 }

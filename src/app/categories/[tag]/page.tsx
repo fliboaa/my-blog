@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllPosts } from "@/lib/api";
+import { getAllPostMeta } from "@/lib/api";
 import { SLUG_TAG, TAG_META } from "@/lib/tags";
 import { PostListPagination } from "@/app/_components/post-list-pagination";
 
@@ -17,7 +17,7 @@ export default async function CategoryPage(props: Props) {
   const tag = SLUG_TAG[slug];
   if (!tag) return notFound();
 
-  const all = getAllPosts().filter((p) => p.tags?.includes(tag));
+  const all = getAllPostMeta().filter((p) => p.tags?.includes(tag));
   const meta = TAG_META[tag];
   const page = Math.max(1, parseInt(pageStr || "1", 10));
   const totalPages = Math.ceil(all.length / PAGE_SIZE);

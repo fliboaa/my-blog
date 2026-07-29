@@ -7,14 +7,12 @@ import { usePathname } from "next/navigation";
 import { type Tag } from "@/interfaces/post";
 import { TAG_SLUG, TAG_META } from "@/lib/tags";
 import { SearchBox } from "./search-box";
-import { type Post } from "@/interfaces/post";
 
 type Props = {
-  posts: Post[];
   tagCounts: Record<string, number>;
 };
 
-export function MobileNav({ posts, tagCounts }: Props) {
+export function MobileNav({ tagCounts }: Props) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -62,7 +60,7 @@ export function MobileNav({ posts, tagCounts }: Props) {
           {createPortal(
             <div className={`mobile-drawer ${open ? "open" : ""}`}>
               <div className="mobile-search-wrap">
-                <SearchBox posts={posts} />
+                <SearchBox />
               </div>
               <nav className="mobile-links">
                 <Link href="/articles">文章</Link>

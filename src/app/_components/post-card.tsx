@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { type Post } from "@/interfaces/post";
+import { type PostMeta } from "@/lib/api";
 import { TagBadge } from "./tag-badge";
 import DateFormatter from "./date-formatter";
 
-export function PostCard({ post }: { post: Post }) {
+export function PostCard({ post }: { post: PostMeta }) {
   return (
     <Link href={`/posts/${post.slug}`} className="card">
       <div className="card-tags">

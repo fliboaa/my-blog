@@ -2,18 +2,14 @@ import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 import { SearchBox } from "./search-box";
 import { MobileNav } from "./mobile-nav";
-import { type Post, type Tag } from "@/interfaces/post";
+import { type Tag } from "@/interfaces/post";
 import { TAG_SLUG, TAG_META } from "@/lib/tags";
 
-export function Navbar({ posts }: { posts: Post[] }) {
-  // 按标签统计篇数
-  const counts: Record<string, number> = {};
-  posts.forEach((p) => {
-    p.tags?.forEach((t: Tag) => {
-      counts[t] = (counts[t] || 0) + 1;
-    });
-  });
+type Props = {
+  tagCounts: Record<string, number>;
+};
 
+export function Navbar({ tagCounts }: Props) {
   return (
     <nav className="nav">
       <div className="container nav-inner">
@@ -23,7 +19,7 @@ export function Navbar({ posts }: { posts: Post[] }) {
         {/* 桌面导航：窄屏隐藏 */}
         <div className="nav-links">
           <Link href="/articles">文章</Link>
-          <SearchBox posts={posts} />
+          <SearchBox />
           <div className="nav-item">
             <span className="nav-trigger">
               分类 <span className="caret">▾</span>
@@ -37,7 +33,7 @@ export function Navbar({ posts }: { posts: Post[] }) {
                 >
                   <span className="ci">{TAG_META[tag].icon}</span>
                   <span className="cn">{tag}</span>
-                  <span className="ccount">{counts[tag] || 0} 篇</span>
+                  <span className="ccount">{tagCounts[tag] || 0} 篇</span>
                 </Link>
               ))}
             </div>
@@ -51,7 +47,7 @@ export function Navbar({ posts }: { posts: Post[] }) {
         {/* 移动端：主题切换 + 汉堡菜单，桌面隐藏 */}
         <div className="nav-mobile-controls">
           <ThemeToggle />
-          <MobileNav posts={posts} tagCounts={counts} />
+          <MobileNav tagCounts={tagCounts} />
         </div>
       </div>
     </nav>

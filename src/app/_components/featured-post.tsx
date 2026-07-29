@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { type Post } from "@/interfaces/post";
+import { type PostMeta } from "@/lib/api";
 import { TagBadge } from "./tag-badge";
 import DateFormatter from "./date-formatter";
 
-export function FeaturedPost({ post }: { post: Post }) {
+export function FeaturedPost({ post }: { post: PostMeta }) {
   return (
     <Link href={`/posts/${post.slug}`} className="featured">
       <div className="featured-body">

@@ -68,3 +68,34 @@ export function getAllPosts(): Post[] {
     });
   return posts;
 }
+
+/**
+ * 轻量元数据类型 —— 不含 content 字段。
+ * Navbar / SearchBox / 首页 / 列表页 / 分页 只需要这些字段,
+ * 用 getAllPostMeta() 代替 getAllPosts() 可避免读取并解析大段正文。
+ */
+export type PostMeta = Omit<Post, "content">;
+
+/**
+ * 返回所有文章的元数据(不含 content 正文)。
+ * 列表页、导航、搜索等不需要正文的场景统一用这个,
+ * 省掉 gray-matter 解析正文的 IO + 反序列化开销。
+ */
+export function getAllPostMeta(): PostMeta[] {
+  const posts = getAllPosts();
+  return posts.map(({ content: _content, ...meta }) => meta);
+}
+
+/**
+ * 统计每个标签下的文章篇数。
+ * 标签是固定 4 个,直接在构建时算好传给 Navbar,避免把全量 posts 透传到客户端。
+ */
+export function getTagCounts(): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const post of getAllPostMeta()) {
+    post.tags?.forEach((t) => {
+      counts[t] = (counts[t] || 0) + 1;
+    });
+  }
+  return counts;
+}

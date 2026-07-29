@@ -1,4 +1,4 @@
-import { getAllPosts } from "@/lib/api";
+import { getAllPostMeta } from "@/lib/api";
 import { TagBadge } from "@/app/_components/tag-badge";
 import { PostListPagination } from "@/app/_components/post-list-pagination";
 import { TAG_SLUG } from "@/lib/tags";
@@ -11,7 +11,7 @@ type Props = {
 
 export default async function ArticlesPage(props: Props) {
   const { page: pageStr } = await props.searchParams;
-  const all = getAllPosts();
+  const all = getAllPostMeta();
   const page = Math.max(1, parseInt(pageStr || "1", 10));
   const totalPages = Math.ceil(all.length / PAGE_SIZE);
   const curPage = Math.min(page, totalPages || 1);
