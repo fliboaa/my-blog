@@ -254,3 +254,22 @@ footer.site-footer{border-top:1px solid var(--border);margin-top:80px;padding:40
   .article-title{font-size:30px}
   .nav-links{gap:16px}
 }
+
+/* Mermaid 图表样式 */
+.mermaid-diagram{
+  display:flex;
+  justify-content:center;
+  margin:32px 0;
+  padding:24px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow-x:auto;
+}
+.mermaid-diagram svg{
+  max-width:100%;
+  height:auto;
+}
+.mermaid-error{
+  border-color:var(--magenta);
+}

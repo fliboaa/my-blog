@@ -6,6 +6,7 @@ import { TagBadge } from "@/app/_components/tag-badge";
 import DateFormatter from "@/app/_components/date-formatter";
 import { TableOfContents } from "@/app/_components/table-of-contents";
 import { ReadingProgress } from "@/app/_components/reading-progress";
+import { MermaidRenderer } from "@/app/_components/mermaid-renderer";
 
 export default async function Post(props: Params) {
   const params = await props.params;
@@ -58,6 +59,8 @@ export default async function Post(props: Params) {
           </div>
 
           <div className="prose" dangerouslySetInnerHTML={{ __html: content }} />
+
+          <MermaidRenderer />
 
           <div className="article-footer">
             <div className="author-card">
