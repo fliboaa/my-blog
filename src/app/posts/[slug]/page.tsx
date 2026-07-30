@@ -1,12 +1,14 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPostBySlug, getAllPostMeta } from "@/lib/api";
+import { getPostBySlug, getAllPostMeta, getRelatedPosts } from "@/lib/api";
 import markdownToHtml from "@/lib/markdownToHtml";
+import { extractHeadings } from "@/lib/toc";
 import { TagBadge } from "@/app/_components/tag-badge";
 import DateFormatter from "@/app/_components/date-formatter";
 import { TableOfContents } from "@/app/_components/table-of-contents";
 import { ReadingProgress } from "@/app/_components/reading-progress";
 import { MermaidRenderer } from "@/app/_components/mermaid-renderer";
+import { RelatedPosts } from "@/app/_components/related-posts";
 
 export default async function Post(props: Params) {
   const params = await props.params;
@@ -18,12 +20,13 @@ export default async function Post(props: Params) {
 
   const content = await markdownToHtml(post.content || "");
   const showToc = post.toc !== false;
+  const related = getRelatedPosts(post, 3);
 
   return (
     <>
       {showToc && <ReadingProgress />}
       <div className={`post-layout ${showToc ? "with-toc" : "no-toc"}`}>
-        {showToc && <TableOfContents />}
+        {showToc && <TableOfContents headings={extractHeadings(content)} />}
 
         <div className="article-col">
           <a href="/" className="back-link">
@@ -72,6 +75,7 @@ export default async function Post(props: Params) {
             </div>
           </div>
         </div>
+        {showToc && <RelatedPosts posts={related} />}
       </div>
     </>
   );
@@ -82,13 +86,12 @@ type Params = {
     slug: string;
   }>;
 };
-
 export async function generateMetadata(props: Params): Promise<Metadata> {
   const params = await props.params;
   const post = getPostBySlug(params.slug);
 
   if (!post) {
-    return notFound();
+    return {};
   }
 
   return {

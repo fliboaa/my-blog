@@ -105,3 +105,23 @@ export function getTagCounts(): Record<string, number> {
   }
   return counts;
 }
+
+/**
+ * 关联阅读 —— 优先取同标签文章，不足时用最新文章补齐。
+ * all 已按日期倒序，直接取前 N 篇即最新。
+ */
+export function getRelatedPosts(post: PostMeta, limit = 3): PostMeta[] {
+  const all = getAllPostMeta();
+  const tags = post.tags ?? [];
+  const related = all.filter(
+    (p) =>
+      p.slug !== post.slug &&
+      p.tags?.some((t) => tags.includes(t)),
+  );
+  if (related.length >= limit) return related.slice(0, limit);
+  const seen = new Set([post.slug, ...related.map((p) => p.slug)]);
+  const fillers = all
+    .filter((p) => !seen.has(p.slug))
+    .slice(0, limit - related.length);
+  return [...related, ...fillers];
+}

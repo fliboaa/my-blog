@@ -1,27 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { type Heading } from "@/lib/toc";
 
-type Heading = { id: string; text: string; level: number };
+type Props = {
+  headings: Heading[];
+};
 
-export function TableOfContents() {
-  const [headings, setHeadings] = useState<Heading[]>([]);
+/**
+ * 文章目录 —— 标题列表由服务端构建时提取（extractHeadings）传入，
+ * SSG HTML 里直接包含完整目录，不依赖 client JS 读 DOM。
+ * 仅保留 scroll-spy 高亮 + 点击跳转作为客户端交互。
+ */
+export function TableOfContents({ headings }: Props) {
   const [activeId, setActiveId] = useState<string>("");
-
-  // 从 prose 内的 h2/h3 提取目录
-  useEffect(() => {
-    const prose = document.querySelector(".prose");
-    if (!prose) return;
-    const els = Array.from(prose.querySelectorAll("h2, h3"));
-    const items: Heading[] = els
-      .map((el) => ({
-        id: el.id,
-        text: el.textContent || "",
-        level: el.tagName === "H2" ? 2 : 3,
-      }))
-      .filter((h) => h.id);
-    setHeadings(items);
-  }, []);
 
   // scroll-spy：高亮当前可视标题
   useEffect(() => {
@@ -42,8 +34,6 @@ export function TableOfContents() {
     return () => observer.disconnect();
   }, [headings]);
 
-  if (headings.length === 0) return null;
-
   const handleClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     const el = document.getElementById(id);
@@ -55,20 +45,24 @@ export function TableOfContents() {
 
   return (
     <aside className="toc">
-      <div className="toc-title">本页目录</div>
-      <ul>
-        {headings.map((h) => (
-          <li key={h.id} className={h.level === 3 ? "toc-sub" : ""}>
-            <a
-              href={`#${h.id}`}
-              className={activeId === h.id ? "active" : ""}
-              onClick={(e) => handleClick(e, h.id)}
-            >
-              {h.text}
-            </a>
-          </li>
-        ))}
-      </ul>
+      {headings.length > 0 && (
+        <>
+          <div className="toc-title">本页目录</div>
+          <ul>
+            {headings.map((h) => (
+              <li key={h.id} className={h.level === 3 ? "toc-sub" : ""}>
+                <a
+                  href={`#${h.id}`}
+                  className={activeId === h.id ? "active" : ""}
+                  onClick={(e) => handleClick(e, h.id)}
+                >
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </aside>
   );
 }
